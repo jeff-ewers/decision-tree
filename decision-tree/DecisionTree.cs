@@ -38,10 +38,15 @@ namespace DecisionTree
         Node current = Root;
         while (!current.IsLeaf)
         {
+            
             if (features[current.FeatureIndex] <= current.SplitValue)
                 current = current.Left;
             else
                 current = current.Right;
+
+            current = features[current.FeatureIndex] <= current.SplitValue 
+                ? current = current.Left ?? throw new InvalidOperationException("Left node is null")
+                : current = current.Right ?? throw new InvalidOperationException("Right node is null");
         }
         return current.Label;
 
@@ -82,7 +87,7 @@ namespace DecisionTree
         // return null to stop recursion if we have no subset data 
         if (data.Count == 0)
         {
-            return new Node {IsLeaf = true, Label = null};
+            return new Node {IsLeaf = true, Label = "Unknown"};
         }
         // find the most common label
         var mostCommonLabel = data 
