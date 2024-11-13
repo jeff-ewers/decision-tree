@@ -1,10 +1,13 @@
+using System;
+using System.Linq;
+
 namespace DecisionTree 
 {
     internal class DecisionTree
     {
         public class Node
         {
-            public bool isLeaf { get; set; } // whether this is final decision point
+            public bool IsLeaf { get; set; } // whether this is final decision point
             public string Label { get; set; }   // for leaf nodes (final decision)
             public int FeatureIndex { get; set; } // feature we're splitting on
             public double SplitValue { get; set; } // value to split at
@@ -46,7 +49,7 @@ namespace DecisionTree
 
     private Node BuildTree (List<DataPoint> data, int depth)
     {
-        // stop if we run out of either tree or data 
+        // stop if we run out of either tree or data (returns null-labeled node)
         // TODO: add helper methods
         if (depth >= maxDepth || data.Count == 0)
             return CreateLeafNode(data); 
@@ -66,11 +69,32 @@ namespace DecisionTree
         var rightData = data.Where(d => d.Features[bestFeature] > bestValue).ToList();
         return new Node
         {
-            isLeaf = false,
+            IsLeaf = false,
             FeatureIndex = bestFeature,
             SplitValue = bestValue,
             Left = BuildTree(leftData, depth+1),
             Right = BuildTree(rightData, depth+1)
+        };
+    }
+
+    private Node CreateLeafNode(List<DataPoint> data)
+    {
+        // return null to stop recursion if we have no subset data 
+        if (data.Count == 0)
+        {
+            return new Node {IsLeaf = true, Label = null};
+        }
+        // find the most common label
+        var mostCommonLabel = data 
+            .GroupBy(d => d.Label)
+            .OrderByDescending(g => g.Count())
+            .First()
+            .Key;
+
+        return new Node
+        {
+            IsLeaf = true,
+            Label = mostCommonLabel
         };
     }
     }
