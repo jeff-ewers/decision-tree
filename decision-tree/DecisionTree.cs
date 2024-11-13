@@ -20,5 +20,58 @@ namespace DecisionTree
         this.maxDepth = maxDepth;
         this.Root = null;
     }
+
+    public void Train(List<DataPoint> data)
+    {
+        // start recursive tree build
+        Root = BuildTree(data, depth: 0);
+    }
+
+    public string Predict(double[] features)
+    {
+        if (Root == null)
+            throw new InvalidOperationException("Tree must be trained before prediction.");
+
+        Node current = Root;
+        while (!current.isLeaf)
+        {
+            if (features[current.FeatureIndex] <= current.SplitValue)
+                current = current.Left;
+            else
+                current = current.Right;
+        }
+        return current.Label;
+
+    }
+
+    private Node BuildTree (List<DataPoint> data, int depth)
+    {
+        // stop if we run out of either tree or data 
+        // TODO: add helper methods
+        if (depth >= maxDepth || data.Count == 0)
+            return CreateLeafNode(data); 
+        
+        if (data.All(d => d.Label == data[0].Label))
+            return CreateLeafNode(data);
+        
+        // TODO: add helper methods
+        var (bestFeature, bestValue) = FindBestSplit(data);
+
+        // if we can't find a good split, return a leaf node
+        if (bestFeature == -1)
+            return CreateLeafNode(data);
+
+        // split the data
+        var leftData = data.Where(d => d.Features[bestFeature] <= bestValue).ToList();
+        var rightData = data.Where(d => d.Features[bestFeature] > bestValue).ToList();
+        return new Node
+        {
+            isLeaf = false,
+            FeatureIndex = bestFeature,
+            SplitValue = bestValue,
+            Left = BuildTree(leftData, depth+1),
+            Right = BuildTree(rightData, depth+1)
+        };
+    }
     }
 }
