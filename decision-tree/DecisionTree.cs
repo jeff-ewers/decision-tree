@@ -138,5 +138,30 @@ namespace DecisionTree
 
 
     }
+
+    private double CalculateInformationGain(List<DataPoint> data, int feature, double splitValue)
+    {
+        var leftData = data.Where(d => d.Features[feature] <= splitValue).ToList();
+        var rightData = data.Where(d => d.Features[feature] > splitValue).ToList();
+
+        // zero gain if split results in empty set
+        if (rightData.Count == 0 || leftData.Count == 0)
+        {
+            return 0;
+        }
+
+                
+
+
+    }
+
+    private double CalculateEntropy(List<DataPoint> data)
+    {
+        var labelCounts = data
+            .GroupBy(d => d.Label)
+            .Select(g => (double)g.Count() / data.Count);
+
+        return labelCounts.Sum(p => p * Math.Log2(p));
+    }
     }
 }
