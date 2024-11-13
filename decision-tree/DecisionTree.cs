@@ -123,11 +123,11 @@ namespace DecisionTree
             for (int i = 0; i < values.Count - 1; i++)
             {
                 double splitValue = (values[i] + values[i+1]) / 2;
-                // double gain = CalculateInformationGain(data, feature, splitValue);
+                double gain = CalculateInformationGain(data, feature, splitValue);
 
                 if (bestGain > bestGain)
                 {
-                    //bestGain = gain;
+                    bestGain = gain;
                     bestFeature = feature;
                     bestValue = splitValue;
                 }
@@ -150,8 +150,11 @@ namespace DecisionTree
             return 0;
         }
 
-                
-
+        double entropyBefore = CalculateEntropy(data);
+        double entropyAfter =
+            (leftData.Count * CalculateEntropy(leftData) +
+            rightData.Count * CalculateEntropy(rightData)) / data.Count;         
+        return entropyBefore - entropyAfter;
 
     }
 
