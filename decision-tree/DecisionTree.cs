@@ -36,7 +36,7 @@ namespace DecisionTree
             throw new InvalidOperationException("Tree must be trained before prediction.");
 
         Node current = Root;
-        while (!current.isLeaf)
+        while (!current.IsLeaf)
         {
             if (features[current.FeatureIndex] <= current.SplitValue)
                 current = current.Left;
@@ -96,6 +96,47 @@ namespace DecisionTree
             IsLeaf = true,
             Label = mostCommonLabel
         };
+    }
+
+    private (int bestFeature, double bestValue) FindBestSplit(List<DataPoint> data)
+    {
+        
+        if (data.Count == 0 || data[0].Features.Length == 0)
+            return (-1,0);
+        
+        double bestGain = 0;
+        int bestFeature = -1;
+        double bestValue = 0;
+
+        // for each feature
+        for (int feature = 0; feature < data[0].Features.Length; feature++)
+        {
+            // get unique values for the feature
+            var values = data
+                .Select(d => d.Features[feature])
+                .Distinct()
+                .OrderBy(v => v)
+                .ToList();
+
+            // try splitting on each value
+
+            for (int i = 0; i < values.Count - 1; i++)
+            {
+                double splitValue = (values[i] + values[i+1]) / 2;
+                // double gain = CalculateInformationGain(data, feature, splitValue);
+
+                if (bestGain > bestGain)
+                {
+                    //bestGain = gain;
+                    bestFeature = feature;
+                    bestValue = splitValue;
+                }
+            }
+        }
+
+        return (bestFeature, bestValue);
+
+
     }
     }
 }
