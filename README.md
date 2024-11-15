@@ -1,7 +1,11 @@
 # Decision Tree Implementation - Bug Classification System
 
 ## Project Overview
-A from-scratch novice implementation of a decision tree classifier in C#, focusing on real-world software engineering applications. This project demonstrates practical machine learning concepts through the lens of bug classification and software quality assurance.
+A from-scratch novice implementation of a decision tree classifier in C#, focusing on real-world software engineering applications. This project demonstrates practical machine learning concepts through the lens of bug classification and software quality assurance.  
+
+![A basic representation of how the splits in a decision tree serve to classify data](https://kagi.com/proxy/Screen-Shot-2017-03-11-at-10.15.37-PM.png?c=S7g-MMyJAk28AXA-P_mp6lbg2cYRLCsR-bIN3N3UIXiLACxk3NO_JM24MwxaX4xleUj1m6BXD0kIksUk40ZsF5rLr9_QbNwMZ07YF-r-DI4PlhHqB16Lo-KT-loYU31wIiTObKKYUWnAqXBhrIvPQg%3D%3D)  
+  
+A basic representation of how the splits in a decision tree serve to classify data
 
 ## Installation and Setup
 
@@ -62,6 +66,14 @@ Demonstrates practical software engineering metrics:
 - Error frequency analysis
 - Historical pattern recognition
 
+### Test Data Features
+Metrics:
+- Users affected: ###
+- Customer-facing: Yes/No
+- Core functionality: Yes/No
+- Error reports / hour: ###
+- Similar recent bugs: ###
+
 ## Technical Concepts Demonstrated
 ### Machine Learning
 
@@ -91,6 +103,41 @@ This project emphasizes:
 - Proper version control with meaningful commits
 - Type safety and null handling
 - Comprehensive documentation
+
+### Design Decisions
+
+#### Feature Representation
+The project uses an array-based approach for feature storage rather than named properties:
+```
+// Array approach (current implementation)
+public class DataPoint
+{
+    public double[] Features { get; set; }
+}
+
+// Instead of named properties
+public class DataPoint
+{
+    public double IsCustomerFacing { get; set; }
+    public double UsersAffected { get; set; }
+    // etc.
+}
+```
+This design choice offers several advantages:
+
+- Generic implementation that works with any number of features
+- Simple indexing for algorithm operations
+- Flexibility to add/remove features without modifying class structure
+- Better suited for general machine learning applications
+
+Trade-offs:
+
+- Less self-documenting code compared to named properties
+- Requires external feature index documentation
+- No compile-time type checking for specific features
+- Limited IntelliSense support
+
+This approach prioritizes flexibility and algorithm simplicity over domain-specific clarity, making the implementation more suitable for various classification tasks beyond bug severity prediction.
 
 ### Potential Enhancements
 
